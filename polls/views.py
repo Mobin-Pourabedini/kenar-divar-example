@@ -13,6 +13,7 @@ def index(request):
 def entry_endpoint(request):
     context = {
         'return_url': request.query_params.get('return_url'),
+        'app_slug': request.query_params.get('app_slug'),
     }
     return render(request, 'start_service.html', context)
     # return HttpResponse(request.query_params.items())
