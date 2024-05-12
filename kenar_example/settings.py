@@ -121,3 +121,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DIVAR_APP_SLUG = "mire-sulpher-elf"
+DIVAL_OAUTH_REDIRECT_URL = "https://open-platform-redirect.divar.ir/oauth"
+DIVAR_FALLBACK_REDIRECT_URL = "https://kenar-example.darkube.app/oauth/callback"
