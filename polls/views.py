@@ -33,6 +33,6 @@ def entry_endpoint(request):
         'scope': scopes,
         'state': post_token,
     }
-    return redirect(settings.DIVAL_OAUTH_REDIRECT_URL + f'?{urlencode(params)}')
+    return redirect(settings.DIVAL_OAUTH_REDIRECT_URL + f'?{urlencode(params)}'.replace('%2B', '+'))
     # return render(request, 'start_service.html', context)
     # return HttpResponse(request.query_params.items())
