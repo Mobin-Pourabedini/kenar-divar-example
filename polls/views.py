@@ -21,4 +21,4 @@ def entry_endpoint(request):
         'post_token': post_token,
         'return_url': return_url,
     }
-    return HttpResponse(json.dumps(data), content_type='application/json')
+    return HttpResponse(json.dumps(request.GET.dict()), content_type='application/json')
