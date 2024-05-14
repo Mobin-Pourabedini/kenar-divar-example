@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'polls',
+    'user_management',
 ]
 
 MIDDLEWARE = [
@@ -74,10 +76,23 @@ WSGI_APPLICATION = 'kenar_example.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+
+        'NAME': 'kenar',
+
+        'USER': 'postgres',
+
+        'PASSWORD': 'm60iT3NcTrjlk0Cowu38FgX9Zjk5Z3jj',
+
+        'HOST': '1ea30ff6-380f-4b23-b2af-dcd3b160b530.hsvc.ir',
+
+        'PORT': '31955',
+
     }
+
 }
 
 
@@ -125,3 +140,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DIVAR_APP_SLUG = "mire-sulpher-elf"
 DIVAL_OAUTH_REDIRECT_URL = "https://open-platform-redirect.divar.ir/oauth"
 DIVAR_FALLBACK_REDIRECT_URL = "https://kenar-example.darkube.app/oauth/callback"
+DIVAR_API_KEY = ("45kFWH2rsoQKBeZRWTYb5pleDGn16KS8dNLaM3cXWC63XESkeQYiOJaAC8vpxJkB"
+                 "xaQJ2UQ9Ce2YOV6WwLiI313xpPqYWSvtcF6JPGHW9DzwnrTI1ZBrIT4f0Ip9HPqup"
+                 "5HfQmyCqQMslCFl2kVBysSZYXFdtDbWEGtU0R47V8KdwFUwFaKh3TtASNQ4MKvMsod"
+                 "Sf6iyJqvqhTRl7DUOmRS62JaNLVg142EfBcNFJ0Ypl2HhOhLnW6pQn8U8pyiq")
+DIVAR_OAUTH_ACCESS_TOKEN_URL = "https://api.divar.ir/v1/open-platform/oauth/access_token"

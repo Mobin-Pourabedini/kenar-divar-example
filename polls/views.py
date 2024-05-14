@@ -6,6 +6,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.utils import json
 from kenar_example import settings
+from user_management.models import Post
 
 
 def index(request):
@@ -33,6 +34,7 @@ def entry_endpoint(request):
         'scope': scopes,
         'state': post_token,
     }
+    Post.objects.get_or_create(token=post_token)
     return redirect(settings.DIVAL_OAUTH_REDIRECT_URL + f'?{urlencode(params)}'.replace('%2B', '+'))
     # return render(request, 'start_service.html', context)
     # return HttpResponse(request.query_params.items())
