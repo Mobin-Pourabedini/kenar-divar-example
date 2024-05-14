@@ -67,7 +67,7 @@ def oauth_callback(request):
         "notes": "any notes you want to get back on list api"
     })
     if response.status_code != 200:
-        return HttpResponse('Failed to create addon')
+        return HttpResponse('Failed to create addon\n' + response.json())
     return HttpResponse(status=200, reason='Addon created')
 
 
