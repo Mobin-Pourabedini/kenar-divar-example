@@ -10,8 +10,9 @@ class Technician(models.Model):
 
 
 class Report(models.Model):
-    post_token = models.ForeignKey(Post, on_delete=models.CASCADE)
-    technician_id = models.ForeignKey(Technician, on_delete=models.CASCADE)
+    id = models.AutoField(primary_key=True)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    technician = models.ForeignKey(Technician, on_delete=models.CASCADE)
     battery_health = models.IntegerField(default=0)
     screen_health = models.IntegerField(default=0)
     camera_health = models.IntegerField(default=0)
