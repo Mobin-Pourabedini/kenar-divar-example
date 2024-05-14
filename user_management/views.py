@@ -34,10 +34,16 @@ def oauth_callback(request):
         'x-access-token': post.access_token,
     })
     print(response.json(), response.json().get('phone_numbers')[0])
-    user = User.objects.get_or_create(phone=response.json().get('phone_numbers')[0])
+    user, _ = User.objects.get_or_create(phone=response.json().get('phone_numbers')[0])
     if not user.access_token:
         user.access_token = post.access_token
         user.save()
     post.user = user
     post.save()
     return HttpResponse("Success")
+
+
+@api_view(['GET'])
+def debug(request):
+    user, _ = User.objects.get_or_create(phone='09003041383')
+    return HttpResponse(user.phone)
