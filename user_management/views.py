@@ -11,6 +11,9 @@ from user_management.models import Post, User
 def oauth_callback(request):
     data = request.query_params
     post_token = data.get('state')
+    return_url = data.get('return_url')
+    if not return_url:
+        return_url = "https://google.com"
     post = Post.objects.get(token=post_token)
     if not post:
         return HttpResponse("Post not found")
@@ -39,12 +42,12 @@ def oauth_callback(request):
         user.save()
     post.user = user
     post.save()
-    return HttpResponse("Success")
+    return render(request, 'submitted.html', {"return_url": return_url})
 
 
 @api_view(['GET'])
 def debug(request):
-    return render(request, 'after_auth.html')
+    return render(request, 'submitted.html', {"return_url": "https://google.com"})
 
 
 # @api_view(['POST'])
