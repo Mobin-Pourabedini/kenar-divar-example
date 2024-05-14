@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 
 from kenar_example import settings
-from user_management.models import Post
+from user_management.models import Post, User
 
 
 @api_view(['GET'])
@@ -27,5 +27,16 @@ def oauth_callback(request):
     })
     print(response.json())
     post.access_token = response.json().get('access_token')
+    post.save()
+    response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + '/users', headers={
+        'content-type': 'application/json',
+        'x-api-key': settings.DIVAR_API_KEY,
+        'x-access-token': post.access_token,
+    })
+    user = User.objects.get_or_create(phone=response.json().get('phone_number'))
+    if not user.access_token:
+        user.access_token = post.access_token
+        user.save()
+    post.user = user
     post.save()
     return HttpResponse("Success")
