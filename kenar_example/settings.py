@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ptdgn^0%lglx$h40i7d%bny0p=*im6lb3+(iu5_=@r^@c8kvwv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["kenar-example.darkube.app", "localhost"]
+ALLOWED_HOSTS = ["https://kenar-example.darkube.app", "localhost"]
 
 
 # Application definition
