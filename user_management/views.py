@@ -40,10 +40,73 @@ def oauth_callback(request):
         user.save()
     post.user = user
     post.save()
-    return HttpResponse("Success")
+
+    response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + f'/add-ons/post/{post.token}', headers={
+        'content-type': 'application/json',
+        'x-api-key': settings.DIVAR_API_KEY,
+        'x-access-token': post.access_token,
+    }, json={
+        'widgets': {
+            'widget_list': [
+                {
+                    "widget_type": "LEGEND_TITLE_ROW",
+                    "data": {
+                        "@type": "type.googleapis.com/widgets.LegendTitleRowData",
+                        "title": "hello addon",
+                        "subtitle": "addon subtitle",
+                        "has_divider": True,
+                        "image_url": "logo"
+                    }
+                }
+            ]
+        },
+        "semantic": {
+            "year": 1398,
+            "usage": 100000
+        },
+        "notes": "any notes you want to get back on list api"
+    })
+    if response.status_code != 200:
+        return HttpResponse(status=400, reason='Failed to create addon')
+    return HttpResponse(status=200, reason='Addon created')
 
 
 @api_view(['GET'])
 def debug(request):
-    user, _ = User.objects.get_or_create(phone='09003041383')
-    return HttpResponse(user.phone)
+    return render(request, 'after_auth.html')
+
+
+# @api_view(['POST'])
+# def create_addon(request):
+    # data = request.data
+    # post = Post.objects.get(token=data.get('post_token'))
+    # if not post:
+    #     return HttpResponse(status=400, reason='Post not found')
+    # response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + f'/add-ons/post/{post.token}', headers={
+    #     'content-type': 'application/json',
+    #     'x-api-key': settings.DIVAR_API_KEY,
+    #     'x-access-token': post.access_token,
+    # }, json={
+    #     'widgets': {
+    #         'widget_list': [
+    #             {
+    #                 "widget_type": "LEGEND_TITLE_ROW",
+    #                 "data": {
+    #                     "@type": "type.googleapis.com/widgets.LegendTitleRowData",
+    #                     "title": "hello addon",
+    #                     "subtitle": "addon subtitle",
+    #                     "has_divider": True,
+    #                     "image_url": "logo"
+    #                 }
+    #             }
+    #         ]
+    #     },
+    #     "semantic": {
+    #         "year": 1398,
+    #         "usage": 100000
+    #     },
+    #     "notes": "any notes you want to get back on list api"
+    # })
+    # if response.status_code != 200:
+    #     return HttpResponse(status=400, reason='Failed to create addon')
+    # return HttpResponse(status=200, reason='Addon created')
