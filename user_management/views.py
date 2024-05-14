@@ -13,7 +13,7 @@ def oauth_callback(request):
     post_token = data.get('state')
     post = Post.objects.get(token=post_token)
     if not post:
-        return HttpResponse(status=400)
+        return HttpResponse("Post not found")
     post.code = data.get('code')
     post.save()
     response = requests.post(settings.DIVAR_OAUTH_ACCESS_TOKEN_URL, headers={
@@ -25,7 +25,7 @@ def oauth_callback(request):
         'client_secret': settings.DIVAR_API_KEY,
         'grant_type': 'authorization_code',
     })
-    print(response.json())
+    print("hell", response.json())
     post.access_token = response.json().get('access_token')
     post.save()
     response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + '/users', headers={
@@ -33,7 +33,7 @@ def oauth_callback(request):
         'x-api-key': settings.DIVAR_API_KEY,
         'x-access-token': post.access_token,
     })
-    print(response.json(), response.json().get('phone_numbers')[0])
+    print("helooooo", response.json(), response.json().get('phone_numbers')[0])
     user, _ = User.objects.get_or_create(phone=response.json().get('phone_numbers')[0])
     if not user.access_token:
         user.access_token = post.access_token
@@ -67,7 +67,7 @@ def oauth_callback(request):
         "notes": "any notes you want to get back on list api"
     })
     if response.status_code != 200:
-        return HttpResponse(status=400, reason='Failed to create addon')
+        return HttpResponse('Failed to create addon')
     return HttpResponse(status=200, reason='Addon created')
 
 
