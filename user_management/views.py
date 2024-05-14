@@ -33,7 +33,8 @@ def oauth_callback(request):
         'x-api-key': settings.DIVAR_API_KEY,
         'x-access-token': post.access_token,
     })
-    user = User.objects.get_or_create(phone=response.json().get('phone_number'))
+    print(response.json(), response.json().get('phone_numbers')[0])
+    user = User.objects.get_or_create(phone=response.json().get('phone_numbers')[0])
     if not user.access_token:
         user.access_token = post.access_token
         user.save()
