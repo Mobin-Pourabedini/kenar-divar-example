@@ -24,6 +24,7 @@ def entry_endpoint(request):
     scopes = '+'.join([
         f'CHAT_READ_POST_CONVERSATIONS__{post_token}',
         f'CHAT_SEND_MESSAGE_POST_CONVERSATIONS__{post_token}',
+        f'ADD_ON_CREATE__{post_token}',
         'USER_ADDON_CREATE',
         'USER_PHONE',
     ])

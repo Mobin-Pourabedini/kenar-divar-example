@@ -33,42 +33,13 @@ def oauth_callback(request):
         'x-api-key': settings.DIVAR_API_KEY,
         'x-access-token': post.access_token,
     })
-    print("helooooo", response.json(), response.json().get('phone_numbers')[0])
     user, _ = User.objects.get_or_create(phone=response.json().get('phone_numbers')[0])
     if not user.access_token:
         user.access_token = post.access_token
         user.save()
     post.user = user
     post.save()
-
-    response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + f'/add-ons/post/{post.token}', headers={
-        'content-type': 'application/json',
-        'x-api-key': settings.DIVAR_API_KEY,
-        'x-access-token': post.access_token,
-    }, json={
-        'widgets': {
-            'widget_list': [
-                {
-                    "widget_type": "LEGEND_TITLE_ROW",
-                    "data": {
-                        "@type": "type.googleapis.com/widgets.LegendTitleRowData",
-                        "title": "hello addon",
-                        "subtitle": "addon subtitle",
-                        "has_divider": True,
-                        "image_url": "logo"
-                    }
-                }
-            ]
-        },
-        "semantic": {
-            "year": 1398,
-            "usage": 100000
-        },
-        "notes": "any notes you want to get back on list api"
-    })
-    if response.status_code != 200:
-        return HttpResponse(response.json())
-    return HttpResponse(status=200, reason='Addon created')
+    return HttpResponse("Success")
 
 
 @api_view(['GET'])
