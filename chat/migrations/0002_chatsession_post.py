@@ -3,6 +3,8 @@
 from django.db import migrations, models
 import django.db.models.deletion
 
+from user_management.models import Post
+
 
 class Migration(migrations.Migration):
 
@@ -15,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='chatsession',
             name='post',
-            field=models.ForeignKey(default='a', on_delete=django.db.models.deletion.CASCADE, related_name='chat_sessions', to='user_management.post'),
+            field=models.ForeignKey(default=Post.objects.get(token="gZEhY4g7"), on_delete=django.db.models.deletion.CASCADE, related_name='chat_sessions', to='user_management.post'),
             preserve_default=False,
         ),
     ]
