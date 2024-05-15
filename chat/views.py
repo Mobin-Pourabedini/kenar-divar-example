@@ -17,7 +17,7 @@ def start_chat_session(request):
     post_token = data["post_token"]
     user_id = data["user_id"]
     peer_id = data["peer_id"]
-    supplier_id = data["Supplier"]["id"]
+    supplier_id = data["supplier"]["id"]
     demand_id = data["demand"]["id"]
     ChatSession.objects.create(
         post=Post.objects.get(token=post_token),
