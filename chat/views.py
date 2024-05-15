@@ -19,6 +19,7 @@ def start_chat_session(request):
     peer_id = data["peer_id"]
     supplier_id = data["supplier"]["id"]
     demand_id = data["demand"]["id"]
+    callback_url = data["callback_url"]
     ChatSession.objects.create(
         post=Post.objects.get_or_create(token=post_token)[0],
         user_id=user_id,
@@ -30,5 +31,5 @@ def start_chat_session(request):
     return JsonResponse({
       "status": "200",
       "message": "success",
-      "url": "https://google.com"
+      "url": f"{callback_url}"
     })
