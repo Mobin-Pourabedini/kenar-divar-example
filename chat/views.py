@@ -20,7 +20,7 @@ def start_chat_session(request):
     supplier_id = data["supplier"]["id"]
     demand_id = data["demand"]["id"]
     ChatSession.objects.create(
-        post=Post.objects.get_or_create(token=post_token),
+        post=Post.objects.get_or_create(token=post_token)[0],
         user_id=user_id,
         peer_id=peer_id,
         supplier_id=supplier_id,
