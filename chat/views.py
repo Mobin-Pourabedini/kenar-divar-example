@@ -35,7 +35,7 @@ def start_chat_session(request):
     b = base64.b64encode(base64_permission_details.encode('utf-8'))
     b64_permission_str = b.decode('utf-8')
     scopes = '+'.join([
-        f"CHAT_SEND_MESSAGE_OAUTH__{b}"
+        f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
     ])
     chat_session = ChatSession.objects.create(
         post=Post.objects.get_or_create(token=post_token)[0],
