@@ -1,5 +1,6 @@
 import base64
 import json
+from datetime import datetime
 
 import requests
 from django.http import HttpResponse, JsonResponse
@@ -67,8 +68,10 @@ def chat_oauth_callback(request):
     except Exception as e:
         return HttpResponse("Chat session not found")
     oauth_service = OAuthService(client_secret=settings.DIVAR_API_KEY, app_slug=settings.DIVAR_APP_SLUG)
-    access_token = oauth_service.get_access_token(data.get('code'))
-    chat_session.access_token = access_token
+    response = oauth_service.get_access_token(data.get('code'))
+    chat_session.access_token = response["access_token"]
+    chat_session.refresh_token = response["refresh_token"]
+    chat_session.access_token_expires_at = datetime.fromtimestamp(int(response["expires"]))
     chat_session.save()
     context = {
         'chat_session_id': chat_session_id,
