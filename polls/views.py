@@ -1,12 +1,7 @@
-from urllib.parse import urlencode
-
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.utils import json
-from kenar_example import settings
-from user_management.models import Post
+from misc.oauth.oauth import generate_oauth_url
 
 
 def index(request):
@@ -28,14 +23,9 @@ def entry_endpoint(request):
         'USER_ADDON_CREATE',
         'USER_PHONE',
     ])
-    params = {
-        'response_type': 'code',
-        'client_id': settings.DIVAR_APP_SLUG,
-        'redirect_uri': settings.DIVAR_FALLBACK_REDIRECT_URL,
-        'scope': scopes,
-        'state': post_token,
-    }
-    Post.objects.get_or_create(token=post_token)
-    return redirect(settings.DIVAL_OAUTH_REDIRECT_URL + f'?{urlencode(params)}'.replace('%2B', '+'))
+    oath_permission_url = generate_oauth_url(post_token=post_token, scopes=scopes, state=post_token)
+    return redirect(oath_permission_url)
     # return render(request, 'start_service.html', context)
     # return HttpResponse(request.query_params.items())
+
+

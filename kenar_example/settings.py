@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ptdgn^0%lglx$h40i7d%bny0p=*im6lb3+(iu5_=@r^@c8kvwv
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["kenar-example.darkube.app", "localhost", "4a87a4ffc92991290d80f2225fefbe93.serveo.net", "4f54-16-24-70-196.ngrok-free.app"]
+ALLOWED_HOSTS = ["kenar-example.darkube.app", "localhost", "ef7e-16-24-70-196.ngrok-free.app"]
 
 CSRF_TRUSTED_ORIGINS = ['https://kenar-example.darkube.app', 'http://localhost:8000', 'http://127.0.0.1:8000']
 
@@ -142,10 +142,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DIVAR_APP_SLUG = "mire-sulpher-elf"
 DIVAL_OAUTH_REDIRECT_URL = "https://open-platform-redirect.divar.ir/oauth"
-DIVAR_FALLBACK_REDIRECT_URL = "https://kenar-example.darkube.app/oauth/callback"
+APP_BASE_URL = "https://kenar-example.darkube.app"
+DIVAR_FALLBACK_REDIRECT_URL = f"{APP_BASE_URL}/oauth/callback"
+CHAT_FALLBACK_REDIRECT_URL = f"{APP_BASE_URL}/chat/oauth/callback"
 DIVAR_API_KEY = ("45kFWH2rsoQKBeZRWTYb5pleDGn16KS8dNLaM3cXWC63XESkeQYiOJaAC8vpxJkB"
                  "xaQJ2UQ9Ce2YOV6WwLiI313xpPqYWSvtcF6JPGHW9DzwnrTI1ZBrIT4f0Ip9HPqup"
                  "5HfQmyCqQMslCFl2kVBysSZYXFdtDbWEGtU0R47V8KdwFUwFaKh3TtASNQ4MKvMsod"
                  "Sf6iyJqvqhTRl7DUOmRS62JaNLVg142EfBcNFJ0Ypl2HhOhLnW6pQn8U8pyiq")
 DIVAR_OAUTH_ACCESS_TOKEN_URL = "https://api.divar.ir/v1/open-platform/oauth/access_token"
-DIVAR_OPEN_PLATFORM_BASE_URL = "https://api.divar.ir/v1/open-platform"
+DIVAR_OPEN_PLATFORM_BASE_URL =  \
+       "https://api.divar.ir/v1/open-platform"

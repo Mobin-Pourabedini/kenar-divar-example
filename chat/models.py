@@ -4,6 +4,8 @@ from user_management.models import Post
 
 
 class ChatSession(models.Model):
+    id = models.AutoField(primary_key=True)
+    access_token = models.CharField(max_length=255, null=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='chat_sessions')
     user_id = models.CharField(max_length=255)
     peer_id = models.CharField(max_length=255)
