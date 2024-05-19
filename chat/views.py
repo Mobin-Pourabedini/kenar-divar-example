@@ -47,7 +47,7 @@ def start_chat_session(request):
     permission_url = generate_oauth_url(
         post_token, scopes,
         state=chat_session.id,
-        fallback_redirect_url=settings.APP_BASE_URL + '/chat/oauth/fallback'
+        fallback_redirect_url=settings.APP_BASE_URL + '/chat/oauth/callback'
     )
     print(data)
     return JsonResponse({
@@ -58,7 +58,7 @@ def start_chat_session(request):
 
 
 @api_view(['GET'])
-def chat_oauth_fallback(request):
+def chat_oauth_callback(request):
     data = request.query_params
     chat_session_id = data.get('state')
     chat_session = None
