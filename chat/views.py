@@ -87,18 +87,7 @@ def chat_oauth_callback(request):
 
 @api_view(['GET'])
 def debug(request):
-    post_token = "gZEhY4g7"
-    chat_session_id = 77
-    scopes = '+'.join([
-        # f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
-        f"CHAT_POST_CONVERSATIONS_READ__{post_token}",
-    ])
-    permission_url = generate_oauth_url(
-        post_token, scopes,
-        state=chat_session_id,
-        fallback_redirect_url=settings.APP_BASE_URL + '/chat/oauth/callback'
-    )
-    return HttpResponse(permission_url)
+    return render(request, 'chat_menu.html', {"chat_session_id": 1})
 
 
 @api_view(['POST'])

@@ -1,49 +1,55 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="{% static 'styles.css' %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submission Received</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f4f4f4;
-        }
-        .container {
-            text-align: center;
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .button {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 0.5rem 1rem;
-            font-size: 1rem;
-            color: white;
-            background-color: #007bff;
-            border: none;
-            border-radius: 5px;
-            text-decoration: none;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 <body>
+    <form action="{% url 'patch_addon' %}" method="post">
+        {% csrf_token %}
+        <div class="horizontal-container" style="margin-bottom: 50px">
+            <h1 style="margin: auto">Register Your add-on</h1>
+        </div>
+        <div class="horizontal-container">
+
+            <div class="horizontal-container">
+                <label for="battery_health">battery health:</label>
+                <input type="text" id="battery_health" name="battery_health" required>
+            </div>
+            <div class="horizontal-container">
+                <label for="camera_health">camera health:</label>
+                <input type="text" id="camera_health" name="camera_health" required>
+            </div>
+        </div>
+        <div class="horizontal-container">
+            <div class="horizontal-container">
+                <label for="screen_health">screen health:</label>
+                <input type="text" id="screen_health" name="screen_health" required>
+            </div>
+            <div class="horizontal-container">
+                <label for="performance">performance:</label>
+                <input type="text" id="performance" name="performance" required>
+            </div>
+        </div>
+        <div class="horizontal-container">
+            <div class="horizontal-container" style="margin: auto">
+                <label for="physical_health">physical health:</label>
+                <input type="text" id="physical_health" name="physical_health" required>
+            </div>
+        </div>
+        <input type="text" id="post_token" name="post_token" style="display:none;" value={{ post_token }}>
+        <input type="text" id="return_url" name="return_url" style="display:none;" value={{ return_url }}>
+        <div class="horizontal-container" style="margin-top: 30px">
+            <button type="submit" style="margin: auto">Submit</button>
+        </div>
+    </form>
     <div class="container">
         <p>Thanks for submitting your post. Now just get to the closest agent to get your phone checked.</p>
-        <a href="https://google.com" class="button">Nearest Agent</a>
-        <a href="{{ return_url }}" class="button">Back to Divar</a>
+        <a href="https://google.com" class="button_link">Nearest Agent</a>
+        <a href="{{ return_url }}" class="button_link">Back to Divar</a>
     </div>
 </body>
 </html>

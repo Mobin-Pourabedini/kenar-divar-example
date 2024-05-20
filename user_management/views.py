@@ -1,9 +1,14 @@
+import json
+
 import requests
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 
 from kenar_example import settings
+from tech_check.models import Report, Technician
+from tech_check.utils import apply_report_in_divar
 from user_management.models import Post, User
 
 
@@ -42,45 +47,38 @@ def oauth_callback(request):
         user.save()
     post.user = user
     post.save()
-    return render(request, 'submitted.html', {"return_url": return_url})
+    return render(request, 'submitted.html', {"return_url": return_url, "post_token": post_token})
 
 
 @api_view(['GET'])
 def debug(request):
-    return render(request, 'submitted.html', {"return_url": "https://google.com"})
+    return render(request, 'submitted.html', {"return_url": "https://google.com", "post_token": "gZLBEpre"})
 
 
-# @api_view(['POST'])
-# def create_addon(request):
-    # data = request.data
-    # post = Post.objects.get(token=data.get('post_token'))
-    # if not post:
-    #     return HttpResponse(status=400, reason='Post not found')
-    # response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + f'/add-ons/post/{post.token}', headers={
-    #     'content-type': 'application/json',
-    #     'x-api-key': settings.DIVAR_API_KEY,
-    #     'x-access-token': post.access_token,
-    # }, json={
-    #     'widgets': {
-    #         'widget_list': [
-    #             {
-    #                 "widget_type": "LEGEND_TITLE_ROW",
-    #                 "data": {
-    #                     "@type": "type.googleapis.com/widgets.LegendTitleRowData",
-    #                     "title": "hello addon",
-    #                     "subtitle": "addon subtitle",
-    #                     "has_divider": True,
-    #                     "image_url": "logo"
-    #                 }
-    #             }
-    #         ]
-    #     },
-    #     "semantic": {
-    #         "year": 1398,
-    #         "usage": 100000
-    #     },
-    #     "notes": "any notes you want to get back on list api"
-    # })
-    # if response.status_code != 200:
-    #     return HttpResponse(status=400, reason='Failed to create addon')
-    # return HttpResponse(status=200, reason='Addon created')
+@api_view(['POST'])
+# @csrf_exempt
+def patch_addon(request):
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+    data = request.POST
+    post_token = data.get('post_token')
+    battery_health = data.get('battery_health')
+    camera_health = data.get('camera_health')
+    body_health = data.get('physical_health')
+    screen_health = data.get('screen_health')
+    performance_health = data.get('performance')
+    return_url = data.get('return_url')
+
+    report = Report.objects.create(
+        technician=Technician.objects.get_or_create(name='SELF REPORT', phone='0')[0],
+        post=Post.objects.get(token=post_token),
+        battery_health=int(battery_health),
+        camera_health=int(camera_health),
+        body_health=int(body_health),
+        screen_health=int(screen_health),
+        performance_health=int(performance_health),
+    )
+    response = apply_report_in_divar(report)
+    if response.status_code != 200:
+        return HttpResponse(response.json(), status=response.status_code)
+    return redirect(return_url)
