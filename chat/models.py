@@ -17,7 +17,7 @@ class ChatSession(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.user_id[:4]} - {self.peer_id[:4]} - {self.supplier_id[:4]} - {self.demand_id[:4]}"
+        return f"{self.user_id[:4]} - {self.peer_id[:4]} - {self.supplier_id[:4]} - {self.demand_id[:4]} ({self.id})"
 
 
 class ChatMessage(models.Model):
