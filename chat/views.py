@@ -131,3 +131,19 @@ def listen_to_messages(request):
             "status": "200",
             "message": "success"
         })
+
+
+def register_webhook(chat_session: ChatSession):
+    url = "https://api.divar.ir/v1/open-platform/notify/chat/post-conversations"
+    headers = {
+        'x-api-key': settings.DIVAR_API_KEY,
+        'content-type': 'application/json',
+        'x-access-token': chat_session.access_token,
+    }
+    data = {
+        "post_token": chat_session.post.token,
+        "endpoint": settings.APP_BASE_URL + "/chat/listen_to_messages",
+        "identification_key": "<some secret>"
+    }
+    response = requests.post(url, headers=headers, json=data)
+    return response
