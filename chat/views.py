@@ -33,11 +33,10 @@ def start_chat_session(request):
         demand_id=demand_id
     )
     base64_permission_details = f"{user_id}:{post_token}:{peer_id}"
-    b = base64.b64encode(base64_permission_details.encode('utf-8'))
-    b64_permission_str = b.decode('utf-8')
+    b64_permission_str = base64_str(base64_permission_details)
     scopes = '+'.join([
         f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
-        f"CHAT_POST_CONVERSATIONS_READ__{post_token}",
+        f"CHAT_POST_CONVERSATIONS_READ__{base64_str(post_token)}",
     ])
     chat_session = ChatSession.objects.create(
         post=Post.objects.get_or_create(token=post_token)[0],
@@ -57,6 +56,12 @@ def start_chat_session(request):
       "message": "success",
       "url": permission_url
     })
+
+
+def base64_str(base64_permission_details):
+    b = base64.b64encode(base64_permission_details.encode('utf-8'))
+    b64_permission_str = b.decode('utf-8')
+    return b64_permission_str
 
 
 @api_view(['GET'])
