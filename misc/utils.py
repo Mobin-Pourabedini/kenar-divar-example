@@ -4,7 +4,7 @@ from kenar_example import settings
 
 
 def send_message_in_session(session, message):
-    response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + "/chat/conversation", headers={
+    response = requests.post("https://api.divar.ir/v2/open-platform" + "/chat/conversation", headers={
         'content-type': 'application/json',
         'x-api-key': settings.DIVAR_API_KEY,
         'x-access-token': session.access_token,

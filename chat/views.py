@@ -37,6 +37,7 @@ def start_chat_session(request):
     b64_permission_str = b.decode('utf-8')
     scopes = '+'.join([
         f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
+        f"CHAT_READ_POST_CONVERSATIONS__{post_token}",
     ])
     chat_session = ChatSession.objects.create(
         post=Post.objects.get_or_create(token=post_token)[0],
@@ -79,9 +80,17 @@ def chat_oauth_callback(request):
     return render(request, 'chat_menu.html', context)
 
 
+@api_view(['GET'])
+def debug(request):
+    context = {
+        'chat_session_id': 77,
+    }
+    return render(request, 'chat_menu.html', context)
+
+
 @api_view(['POST'])
 def send_message(request):
-    data = json.loads(request.body)
+    data = request.POST
     chat_session_id = data["chat_session_id"]
     message = data["message"]
     chat_session = None
