@@ -90,6 +90,7 @@ def debug(request):
     post_token = "gZEhY4g7"
     chat_session_id = 77
     scopes = '+'.join([
+        # f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
         f"CHAT_POST_CONVERSATIONS_READ__{post_token}",
     ])
     permission_url = generate_oauth_url(
@@ -142,7 +143,7 @@ def register_webhook(chat_session: ChatSession):
     }
     data = {
         "post_token": chat_session.post.token,
-        "endpoint": settings.APP_BASE_URL + "/chat/listen_to_messages",
+        "endpoint": settings.APP_BASE_URL + "/chat/listen",
         "identification_key": "<some secret>"
     }
     response = requests.post(url, headers=headers, json=data)

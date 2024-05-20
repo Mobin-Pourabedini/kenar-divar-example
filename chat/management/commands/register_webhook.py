@@ -9,5 +9,6 @@ class Command(BaseCommand):
     help = "Closes the specified poll for voting"
 
     def handle(self, *args, **options):
-        session = ChatSession.objects.filter(post__token="gZEhY4g7").first()
-        register_webhook(session)
+        session = ChatSession.objects.filter(id=143).first()
+        resp = register_webhook(session)
+        print(resp.json())
