@@ -36,7 +36,7 @@ def start_chat_session(request):
     b64_permission_str = base64_str(base64_permission_details)
     scopes = '+'.join([
         f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
-        f"CHAT_POST_CONVERSATIONS_READ__{base64_str(post_token)}",
+        f"CHAT_POST_CONVERSATIONS_READ__{post_token}",
     ])
     chat_session = ChatSession.objects.create(
         post=Post.objects.get_or_create(token=post_token)[0],
@@ -87,10 +87,17 @@ def chat_oauth_callback(request):
 
 @api_view(['GET'])
 def debug(request):
-    context = {
-        'chat_session_id': 77,
-    }
-    return render(request, 'chat_menu.html', context)
+    post_token = "gZEhY4g7"
+    chat_session_id = 77
+    scopes = '+'.join([
+        f"CHAT_POST_CONVERSATIONS_READ__{post_token}",
+    ])
+    permission_url = generate_oauth_url(
+        post_token, scopes,
+        state=chat_session_id,
+        fallback_redirect_url=settings.APP_BASE_URL + '/chat/oauth/callback'
+    )
+    return HttpResponse(permission_url)
 
 
 @api_view(['POST'])
