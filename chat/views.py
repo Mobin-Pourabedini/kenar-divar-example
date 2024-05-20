@@ -35,7 +35,7 @@ def start_chat_session(request):
     base64_permission_details = f"{user_id}:{post_token}:{peer_id}"
     b64_permission_str = base64_str(base64_permission_details)
     scopes = '+'.join([
-        # f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
+        f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
         f"CHAT_POST_CONVERSATIONS_READ__{post_token}",
     ])
     chat_session = ChatSession.objects.create(
@@ -146,5 +146,6 @@ def register_webhook(chat_session: ChatSession):
         "endpoint": settings.APP_BASE_URL + "/chat/listen",
         "identification_key": "<some secret>"
     }
+    print(data)
     response = requests.post(url, headers=headers, json=data)
     return response
