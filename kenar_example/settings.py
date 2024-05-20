@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'polls',
     'user_management',
     'tech_check',
     'chat'
@@ -59,7 +58,6 @@ ROOT_URLCONF = 'kenar_example.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'polls/templates',],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

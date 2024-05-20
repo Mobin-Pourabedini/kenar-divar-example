@@ -10,8 +10,8 @@ from user_management.models import Post, User
 @api_view(['GET'])
 def oauth_callback(request):
     data = request.query_params
-    post_token = data.get('state')
-    return_url = data.get('return_url')
+    post_token_and_return_url = data.get('state')
+    post_token, return_url = post_token_and_return_url.split(':')
     if not return_url:
         return_url = "https://google.com"
     post = Post.objects.get(token=post_token)
