@@ -11,7 +11,7 @@ from user_management.models import Post, User
 def oauth_callback(request):
     data = request.query_params
     post_token_and_return_url = data.get('state')
-    post_token, return_url = post_token_and_return_url.split(':')
+    post_token, return_url = post_token_and_return_url.split(':', maxsplit=1)
     if not return_url:
         return_url = "https://google.com"
     post = Post.objects.get(token=post_token)
