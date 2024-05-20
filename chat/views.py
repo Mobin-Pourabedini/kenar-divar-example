@@ -8,7 +8,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 
-from chat.models import ChatSession
+from chat.models import ChatSession, ChatMessage
 from kenar_example import settings
 from misc.oauth.oauth import generate_oauth_url, OAuthService
 from misc.utils import send_message_in_session
@@ -35,7 +35,7 @@ def start_chat_session(request):
     base64_permission_details = f"{user_id}:{post_token}:{peer_id}"
     b64_permission_str = base64_str(base64_permission_details)
     scopes = '+'.join([
-        f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
+        # f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
         f"CHAT_POST_CONVERSATIONS_READ__{post_token}",
     ])
     chat_session = ChatSession.objects.create(
@@ -114,3 +114,20 @@ def send_message(request):
 
     res = send_message_in_session(chat_session, message)
     return JsonResponse(res.json())
+
+
+@csrf_exempt
+def listen_to_messages(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        print(data)
+        ChatMessage.objects.create(
+            user_id=data["payload"]["sender"]["id"],
+            peer_id=data["payload"]["receiver"]["id"],
+            message=data["payload"]["data"]["text"],
+            post=Post.objects.get(token=data["payload"]["metadata"]["post_token"]),
+        )
+        return JsonResponse({
+            "status": "200",
+            "message": "success"
+        })
