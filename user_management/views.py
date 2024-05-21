@@ -56,7 +56,6 @@ def debug(request):
 
 
 @api_view(['POST'])
-# @csrf_exempt
 def patch_addon(request):
     if request.method != 'POST':
         return HttpResponse(status=405)

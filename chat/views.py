@@ -36,7 +36,6 @@ def start_chat_session(request):
     b64_permission_str = base64_str(base64_permission_details)
     scopes = '+'.join([
         f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
-        f"CHAT_POST_CONVERSATIONS_READ__{post_token}",
     ])
     chat_session = ChatSession.objects.create(
         post=Post.objects.get_or_create(token=post_token)[0],
@@ -67,7 +66,7 @@ def base64_str(base64_permission_details):
 @api_view(['GET'])
 def chat_oauth_callback(request):
     data = request.query_params
-    chat_session_id = data.get('state')
+    chat_session_id, return_url = data.get('state').split(":", maxsplit=1)
     chat_session = None
     try:
         chat_session = ChatSession.objects.get(id=chat_session_id)
@@ -81,6 +80,7 @@ def chat_oauth_callback(request):
     chat_session.save()
     context = {
         'chat_session_id': chat_session_id,
+        'return_url': 'https://google.com'
     }
     return render(request, 'chat_menu.html', context)
 
