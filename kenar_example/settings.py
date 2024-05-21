@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'user_management',
     'tech_check',
     'chat'
@@ -77,23 +78,14 @@ WSGI_APPLICATION = 'kenar_example.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 DATABASES = {
-
     'default': {
-
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-
-        'NAME': 'kenar',
-
+        'NAME': 'kenar_new',
         'USER': 'postgres',
-
         'PASSWORD': 'm60iT3NcTrjlk0Cowu38FgX9Zjk5Z3jj',
-
         'HOST': '1ea30ff6-380f-4b23-b2af-dcd3b160b530.hsvc.ir',
-
         'PORT': '31955',
-
     }
-
 }
 
 

@@ -1,6 +1,6 @@
 from django.db import models
 
-from user_management.models import Post
+from tech_check.models import Post
 
 
 class ChatSession(models.Model):

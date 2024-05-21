@@ -12,7 +12,7 @@ from chat.models import ChatSession, ChatMessage
 from kenar_example import settings
 from misc.oauth.oauth import generate_oauth_url, OAuthService
 from misc.utils import send_message_in_session
-from user_management.models import Post
+from tech_check.models import Post
 
 
 @csrf_exempt
@@ -105,36 +105,36 @@ def send_message(request):
     res = send_message_in_session(chat_session, message)
     return JsonResponse(res.json())
 
-
-@csrf_exempt
-def listen_to_messages(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        print(data)
-        ChatMessage.objects.create(
-            user_id=data["payload"]["sender"]["id"],
-            peer_id=data["payload"]["receiver"]["id"],
-            message=data["payload"]["data"]["text"],
-            post=Post.objects.get(token=data["payload"]["metadata"]["post_token"]),
-        )
-        return JsonResponse({
-            "status": "200",
-            "message": "success"
-        })
-
-
-def register_webhook(chat_session: ChatSession):
-    url = "https://api.divar.ir/v1/open-platform/notify/chat/post-conversations"
-    headers = {
-        'x-api-key': settings.DIVAR_API_KEY,
-        'content-type': 'application/json',
-        'x-access-token': chat_session.access_token,
-    }
-    data = {
-        "post_token": chat_session.post.token,
-        "endpoint": settings.APP_BASE_URL + "/chat/listen",
-        "identification_key": "<some secret>"
-    }
-    print(data)
-    response = requests.post(url, headers=headers, json=data)
-    return response
+#
+# @csrf_exempt
+# def listen_to_messages(request):
+#     if request.method == 'POST':
+#         data = json.loads(request.body)
+#         print(data)
+#         ChatMessage.objects.create(
+#             user_id=data["payload"]["sender"]["id"],
+#             peer_id=data["payload"]["receiver"]["id"],
+#             message=data["payload"]["data"]["text"],
+#             post=Post.objects.get(token=data["payload"]["metadata"]["post_token"]),
+#         )
+#         return JsonResponse({
+#             "status": "200",
+#             "message": "success"
+#         })
+#
+#
+# def register_webhook(chat_session: ChatSession):
+#     url = "https://api.divar.ir/v1/open-platform/notify/chat/post-conversations"
+#     headers = {
+#         'x-api-key': settings.DIVAR_API_KEY,
+#         'content-type': 'application/json',
+#         'x-access-token': chat_session.access_token,
+#     }
+#     data = {
+#         "post_token": chat_session.post.token,
+#         "endpoint": settings.APP_BASE_URL + "/chat/listen",
+#         "identification_key": "<some secret>"
+#     }
+#     print(data)
+#     response = requests.post(url, headers=headers, json=data)
+#     return response

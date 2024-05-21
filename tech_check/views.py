@@ -1,10 +1,15 @@
-from django.shortcuts import render
+import requests
+from django.shortcuts import render, redirect
 
 # Create your views here.
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from rest_framework.decorators import api_view
+
+from kenar_example import settings
 from misc.oauth.oauth import generate_oauth_url
+from tech_check.models import Report, Technician, Post, User
+from tech_check.utils import apply_report_in_divar
 
 
 def index(request):
@@ -24,3 +29,75 @@ def start_app(request):
     ])
     oath_permission_url = generate_oauth_url(post_token=post_token, scopes=scopes, state=f"{post_token}:{return_url}")
     return redirect(oath_permission_url)
+
+
+@api_view(['GET'])
+def oauth_callback(request):
+    data = request.query_params
+    post_token_and_return_url = data.get('state')
+    post_token, return_url = post_token_and_return_url.split(':', maxsplit=1)
+    if not return_url:
+        return_url = "https://google.com"
+    post = Post.objects.get(token=post_token)
+    if not post:
+        return HttpResponse("Post not found")
+    post.code = data.get('code')
+    post.save()
+    response = requests.post(settings.DIVAR_OAUTH_ACCESS_TOKEN_URL, headers={
+        'x-api-key': settings.DIVAR_API_KEY,
+        'content-type': 'application/json',
+    }, json={
+        'code': post.code,
+        'client_id': settings.DIVAR_APP_SLUG,
+        'client_secret': settings.DIVAR_API_KEY,
+        'grant_type': 'authorization_code',
+    })
+    print("hell", response.json())
+    post.access_token = response.json().get('access_token')
+    post.save()
+    response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + '/users', headers={
+        'content-type': 'application/json',
+        'x-api-key': settings.DIVAR_API_KEY,
+        'x-access-token': post.access_token,
+    })
+    user, _ = User.objects.get_or_create(phone=response.json().get('phone_numbers')[0])
+    if not user.access_token:
+        user.access_token = post.access_token
+        user.save()
+    post.user = user
+    post.save()
+    return render(request, 'submitted.html', {"return_url": return_url, "post_token": post_token})
+
+
+@api_view(['POST'])
+def patch_addon(request):
+    if request.method != 'POST':
+        return HttpResponse(status=405)
+    data = request.POST
+    post_token = data.get('post_token')
+    battery_health = data.get('battery_health')
+    camera_health = data.get('camera_health')
+    body_health = data.get('physical_health')
+    screen_health = data.get('screen_health')
+    performance_health = data.get('performance')
+    return_url = data.get('return_url')
+
+    report = Report.objects.create(
+        technician=Technician.objects.get_or_create(name='SELF REPORT', phone='0')[0],
+        post=Post.objects.get(token=post_token),
+        battery_health=int(battery_health),
+        camera_health=int(camera_health),
+        body_health=int(body_health),
+        screen_health=int(screen_health),
+        performance_health=int(performance_health),
+    )
+    response = apply_report_in_divar(report)
+    if response.status_code != 200:
+        return HttpResponse(response.json(), status=response.status_code)
+    return redirect(return_url)
+
+
+@api_view(['GET'])
+def debug(request):
+    return render(request, 'submitted.html', {"return_url": "https://google.com", "post_token": "gZLBEpre"})
+

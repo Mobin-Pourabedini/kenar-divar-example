@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from tech_check.models import Report, Technician
+from tech_check.models import Report, Technician, Post, User
 from tech_check.utils import apply_report_in_divar
 
 
@@ -28,3 +28,19 @@ class TechnicianAdmin(admin.ModelAdmin):
     list_display = ('phone', 'name')
     list_filter = ('phone', 'name')
     search_fields = ('phone', 'name')
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    list_display = ('token', 'access_token', 'user_phone')
+
+    @admin.display(description='User Phone')
+    def user_phone(self, obj):
+        if obj.user is None:
+            return 'None'
+        return obj.user.phone
+
+
+@admin.register(User)
+class AuthorAdmin(admin.ModelAdmin):
+    list_display = ('phone', 'access_token')

@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 import requests
 
 from kenar_example import settings
-from user_management.models import Post
+from tech_check.models import Post
 
 logger = logging.getLogger(__name__)
 
