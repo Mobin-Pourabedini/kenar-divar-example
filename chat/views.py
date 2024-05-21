@@ -24,7 +24,6 @@ def start_chat_session(request):
     supplier_id = data["supplier"]["id"]
     demand_id = data["demand"]["id"]
     return_url = data["callback_url"]
-    scopes = f"CHAT_SEND_MESSAGE_OAUTH__{base64_str(f'{user_id}:{post_token}:{peer_id}')}"
     chat_session = ChatSession.objects.get_or_create(
         post=Post.objects.get_or_create(token=post_token)[0],
         user_id=user_id,
@@ -33,7 +32,8 @@ def start_chat_session(request):
         demand_id=demand_id
     )[0]
     permission_url = generate_oauth_url(
-        post_token=post_token, scopes=scopes,
+        post_token=post_token,
+        scopes=f"CHAT_SEND_MESSAGE_OAUTH__{base64_str(f'{user_id}:{post_token}:{peer_id}')}",
         state=f"{chat_session.id}:{return_url}",
         fallback_redirect_url=settings.APP_BASE_URL + '/chat/oauth/callback'
     )
@@ -55,21 +55,26 @@ def chat_oauth_callback(request):
     data = request.query_params
     chat_session_id, return_url = data.get('state').split(":", maxsplit=1)
     chat_session = None
+
     try:
         chat_session = ChatSession.objects.get(id=chat_session_id)
     except Exception as e:
         return HttpResponse("Chat session not found")
+
     oauth_service = OAuthService(client_secret=settings.DIVAR_API_KEY, app_slug=settings.DIVAR_APP_SLUG)
     response = oauth_service.get_access_token(data.get('code'))
+
+    print("########################    " + response + "     ################")
+
     chat_session.access_token = response["access_token"]
     chat_session.refresh_token = response["refresh_token"]
     chat_session.access_token_expires_at = datetime.fromtimestamp(int(response["expires"]))
     chat_session.save()
-    context = {
+
+    return render(request, 'chat_menu.html', context={
         'chat_session_id': chat_session_id,
         'return_url': return_url
-    }
-    return render(request, 'chat_menu.html', context)
+    })
 
 
 @api_view(['POST'])
@@ -85,7 +90,9 @@ def send_message(request):
     except Exception as e:
         return HttpResponse("Chat session not found")
 
-    res = send_message_in_session(chat_session, message)
+    response = send_message_in_session(chat_session, message)
+    if response.status_code != 200:
+        return HttpResponse(response.json())
     return redirect(return_url)
 
 #
