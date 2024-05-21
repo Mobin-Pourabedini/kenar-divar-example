@@ -4,7 +4,7 @@ from datetime import datetime
 
 import requests
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 
@@ -86,15 +86,11 @@ def chat_oauth_callback(request):
     return render(request, 'chat_menu.html', context)
 
 
-@api_view(['GET'])
-def debug(request):
-    return render(request, 'chat_menu.html', {"chat_session_id": 1})
-
-
 @api_view(['POST'])
 def send_message(request):
     data = request.POST
     chat_session_id = data["chat_session_id"]
+    return_url = data["return_url"]
     message = data["message"]
     chat_session = None
 
@@ -104,7 +100,7 @@ def send_message(request):
         return HttpResponse("Chat session not found")
 
     res = send_message_in_session(chat_session, message)
-    return JsonResponse(res.json())
+    return redirect(return_url)
 
 #
 # @csrf_exempt

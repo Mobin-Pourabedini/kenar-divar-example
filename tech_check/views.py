@@ -70,8 +70,6 @@ def oauth_callback(request):
 
 @api_view(['POST'])
 def patch_addon(request):
-    if request.method != 'POST':
-        return HttpResponse(status=405)
     data = request.POST
     post_token = data.get('post_token')
     battery_health = data.get('battery_health')
@@ -94,9 +92,3 @@ def patch_addon(request):
     if response.status_code != 200:
         return HttpResponse(response.json(), status=response.status_code)
     return redirect(return_url)
-
-
-@api_view(['GET'])
-def debug(request):
-    return render(request, 'submitted.html', {"return_url": "https://google.com", "post_token": "gZLBEpre"})
-
