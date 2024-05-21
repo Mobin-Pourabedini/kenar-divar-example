@@ -17,40 +17,26 @@ from tech_check.models import Post
 
 @csrf_exempt
 def start_chat_session(request):
-    print("start_chat_session")
     data = json.loads(request.body)
-    print(data)
     post_token = data["post_token"]
     user_id = data["user_id"]
     peer_id = data["peer_id"]
     supplier_id = data["supplier"]["id"]
     demand_id = data["demand"]["id"]
     return_url = data["callback_url"]
-    ChatSession.objects.create(
+    scopes = f"CHAT_SEND_MESSAGE_OAUTH__{base64_str(f'{user_id}:{post_token}:{peer_id}')}"
+    chat_session = ChatSession.objects.get_or_create(
         post=Post.objects.get_or_create(token=post_token)[0],
         user_id=user_id,
         peer_id=peer_id,
         supplier_id=supplier_id,
         demand_id=demand_id
-    )
-    base64_permission_details = f"{user_id}:{post_token}:{peer_id}"
-    b64_permission_str = base64_str(base64_permission_details)
-    scopes = '+'.join([
-        f"CHAT_SEND_MESSAGE_OAUTH__{b64_permission_str}",
-    ])
-    chat_session = ChatSession.objects.create(
-        post=Post.objects.get_or_create(token=post_token)[0],
-        user_id=user_id,
-        peer_id=peer_id,
-        supplier_id=supplier_id,
-        demand_id=demand_id
-    )
+    )[0]
     permission_url = generate_oauth_url(
-        post_token, scopes,
+        post_token=post_token, scopes=scopes,
         state=f"{chat_session.id}:{return_url}",
         fallback_redirect_url=settings.APP_BASE_URL + '/chat/oauth/callback'
     )
-    print(data)
     return JsonResponse({
       "status": "200",
       "message": "success",
