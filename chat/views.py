@@ -25,6 +25,7 @@ def start_chat_session(request):
     peer_id = data["peer_id"]
     supplier_id = data["supplier"]["id"]
     demand_id = data["demand"]["id"]
+    return_url = data["callback_url"]
     ChatSession.objects.create(
         post=Post.objects.get_or_create(token=post_token)[0],
         user_id=user_id,
@@ -46,7 +47,7 @@ def start_chat_session(request):
     )
     permission_url = generate_oauth_url(
         post_token, scopes,
-        state=chat_session.id,
+        state=f"{chat_session.id}:{return_url}",
         fallback_redirect_url=settings.APP_BASE_URL + '/chat/oauth/callback'
     )
     print(data)
@@ -80,7 +81,7 @@ def chat_oauth_callback(request):
     chat_session.save()
     context = {
         'chat_session_id': chat_session_id,
-        'return_url': 'https://google.com'
+        'return_url': return_url
     }
     return render(request, 'chat_menu.html', context)
 
