@@ -31,9 +31,7 @@ def start_chat_session(request):
         supplier_id=supplier_id,
         demand_id=demand_id
     )
-    if (created or
-            (not chat_session.access_token_expires_at or
-             (chat_session.access_token_expires_at - datetime.now()).hour < 1)):
+    if created:
         permission_url = generate_oauth_url(
             post_token=post_token,
             scopes=f"CHAT_SEND_MESSAGE_OAUTH__{base64_str(f'{user_id}:{post_token}:{peer_id}')}",
@@ -45,6 +43,9 @@ def start_chat_session(request):
           "message": "success",
           "url": permission_url
         })
+    elif not chat_session.access_token_expires_at or (chat_session.access_token_expires_at - datetime.now()).hour < 1:
+        # TODO get new access token using refresh token
+        pass
 
     return render(request, 'chat_menu.html', context={
         'chat_session_id': chat_session.id,
@@ -73,6 +74,8 @@ def chat_oauth_callback(request):
     response = oauth_service.get_access_token(data.get('code'))
 
     print(response)
+    if response.get("access_token") is None:
+        return redirect(return_url)
 
     chat_session.access_token = response["access_token"]
     chat_session.refresh_token = response["refresh_token"]
