@@ -31,25 +31,16 @@ def start_chat_session(request):
         supplier_id=supplier_id,
         demand_id=demand_id
     )
-    if created:
-        permission_url = generate_oauth_url(
-            post_token=post_token,
-            scopes=f"CHAT_SEND_MESSAGE_OAUTH__{base64_str(f'{user_id}:{post_token}:{peer_id}')}",
-            state=f"{chat_session.id}:{return_url}",
-            fallback_redirect_url=settings.APP_BASE_URL + '/chat/oauth/callback'
-        )
-        return JsonResponse({
-          "status": "200",
-          "message": "success",
-          "url": permission_url
-        })
-    elif not chat_session.access_token_expires_at or (chat_session.access_token_expires_at - datetime.now()).hour < 1:
-        # TODO get new access token using refresh token
-        pass
-
-    return render(request, 'chat_menu.html', context={
-        'chat_session_id': chat_session.id,
-        'return_url': return_url
+    permission_url = generate_oauth_url(
+        post_token=post_token,
+        scopes=f"CHAT_SEND_MESSAGE_OAUTH__{base64_str(f'{user_id}:{post_token}:{peer_id}')}",
+        state=f"{chat_session.id}:{return_url}",
+        fallback_redirect_url=settings.APP_BASE_URL + '/chat/oauth/callback'
+    )
+    return JsonResponse({
+      "status": "200",
+      "message": "success",
+      "url": permission_url
     })
 
 
