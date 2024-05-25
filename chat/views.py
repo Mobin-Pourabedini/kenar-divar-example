@@ -64,7 +64,7 @@ def chat_oauth_callback(request):
     oauth_service = OAuthService(client_secret=settings.DIVAR_API_KEY, app_slug=settings.DIVAR_APP_SLUG)
     response = oauth_service.get_access_token(data.get('code'))
 
-    print("########################    " + response + "     ################")
+    print("########################    " + response.json() + "     ################")
 
     chat_session.access_token = response["access_token"]
     chat_session.refresh_token = response["refresh_token"]
