@@ -24,23 +24,31 @@ def start_chat_session(request):
     supplier_id = data["supplier"]["id"]
     demand_id = data["demand"]["id"]
     return_url = data["callback_url"]
-    chat_session = ChatSession.objects.get_or_create(
+    chat_session, created = ChatSession.objects.get_or_create(
         post=Post.objects.get_or_create(token=post_token)[0],
         user_id=user_id,
         peer_id=peer_id,
         supplier_id=supplier_id,
         demand_id=demand_id
-    )[0]
-    permission_url = generate_oauth_url(
-        post_token=post_token,
-        scopes=f"CHAT_SEND_MESSAGE_OAUTH__{base64_str(f'{user_id}:{post_token}:{peer_id}')}",
-        state=f"{chat_session.id}:{return_url}",
-        fallback_redirect_url=settings.APP_BASE_URL + '/chat/oauth/callback'
     )
-    return JsonResponse({
-      "status": "200",
-      "message": "success",
-      "url": permission_url
+    if (created or
+            (not chat_session.access_token_expires_at or
+             (chat_session.access_token_expires_at - datetime.now()).hour < 1)):
+        permission_url = generate_oauth_url(
+            post_token=post_token,
+            scopes=f"CHAT_SEND_MESSAGE_OAUTH__{base64_str(f'{user_id}:{post_token}:{peer_id}')}",
+            state=f"{chat_session.id}:{return_url}",
+            fallback_redirect_url=settings.APP_BASE_URL + '/chat/oauth/callback'
+        )
+        return JsonResponse({
+          "status": "200",
+          "message": "success",
+          "url": permission_url
+        })
+
+    return render(request, 'chat_menu.html', context={
+        'chat_session_id': chat_session.id,
+        'return_url': return_url
     })
 
 
