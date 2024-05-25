@@ -148,3 +148,46 @@ response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + f'/add-ons/post
     "notes": "any notes you want to get back on list api"
 })
 ```
+
+### Starting app from chat
+In order to start your app from the chat, you should provide the endpoint for your app in the developer panel, divar will send 
+a request to the provided endpoint to start your web application. The request will contain the following parameters:
+```json
+{ 
+    "extra_data": {
+        "location": {
+            "latitude": "latitude",
+            "longitude": "longitude"
+        }
+    },
+    "post_token": "<post_token>",
+    "user_id": "<user_id>",
+    "peer_id": "<peer_id>",
+    "demand": {
+        "id": "<demand_id>"
+    },
+    "supplier": {
+        "id": "<supplier_id>"
+    },
+    "return_url": "<return_url>"
+}
+```
+like the previous case you can get permissions from the user by redirecting the user to the oauth of divar or redirect 
+the user to the main page of your web application.
+<br>
+After obtaining the access token you can use it to send messages in the chat:
+```python
+def send_message_in_session(session, message):
+    response = requests.post("https://api.divar.ir/v2/open-platform" + "/chat/conversation", headers={
+        'content-type': 'application/json',
+        'x-api-key': settings.DIVAR_API_KEY,
+        'x-access-token': session.access_token,
+    }, json={
+        'post_token': session.post.token,
+        'user_id': session.user_id,
+        'peer_id': session.peer_id,
+        'type': 'TEXT',
+        'message': message
+    })
+    return response
+``` 
