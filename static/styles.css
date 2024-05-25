@@ -15,6 +15,7 @@ body {
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 1rem;
 }
 .button_link {
     display: inline-block;
@@ -38,7 +39,7 @@ button {
     border-radius: 5px;
     text-decoration: none;
 }
-.button_link:hover {
+.button_link:hover, button:hover {
     background-color: #0056b3;
 }
 form {
@@ -53,13 +54,27 @@ form {
 
 label {
     display: block;
-    margin: 5px;
+    margin: 5px 0;
 }
-input[type="text"],
-input[type="email"],
 .horizontal-container {
     display: flex;
-    border-radius: 5px;
-    align-items: center;
-    margin-right: 20px;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+/* New class to handle form group styling */
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0.5rem; /* Add margin between items */
+}
+
+input[type="text"] {
+    width: 50px; /* Ensure input spans its container */
+    padding: 10px; /* Add some padding */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensure padding doesn't affect total width */
 }

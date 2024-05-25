@@ -1,11 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="{% static 'styles.css' %}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Submission Received</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
 </head>
 <body>
     <form action="{% url 'patch_addon' %}" method="post">
@@ -14,34 +14,33 @@
             <h1 style="margin: auto">Register Your add-on</h1>
         </div>
         <div class="horizontal-container">
-
-            <div class="horizontal-container">
-                <label for="battery_health">battery health:</label>
+            <div class="form-group">
+                <label for="battery_health">Battery Health:</label>
                 <input type="text" id="battery_health" name="battery_health" required>
             </div>
-            <div class="horizontal-container">
-                <label for="camera_health">camera health:</label>
+            <div class="form-group">
+                <label for="camera_health">Camera Health:</label>
                 <input type="text" id="camera_health" name="camera_health" required>
             </div>
         </div>
         <div class="horizontal-container">
-            <div class="horizontal-container">
-                <label for="screen_health">screen health:</label>
+            <div class="form-group">
+                <label for="screen_health">Screen Health:</label>
                 <input type="text" id="screen_health" name="screen_health" required>
             </div>
-            <div class="horizontal-container">
-                <label for="performance">performance:</label>
+            <div class="form-group">
+                <label for="performance">Performance:</label>
                 <input type="text" id="performance" name="performance" required>
             </div>
         </div>
         <div class="horizontal-container">
-            <div class="horizontal-container" style="margin: auto">
-                <label for="physical_health">physical health:</label>
+            <div class="form-group">
+                <label for="physical_health">Physical Health:</label>
                 <input type="text" id="physical_health" name="physical_health" required>
             </div>
         </div>
-        <input type="text" id="post_token" name="post_token" style="display:none;" value={{ post_token }}>
-        <input type="text" id="return_url" name="return_url" style="display:none;" value={{ return_url }}>
+        <input type="text" id="post_token" name="post_token" style="display:none;" value="{{ post_token }}">
+        <input type="text" id="return_url" name="return_url" style="display:none;" value="{{ return_url }}">
         <div class="horizontal-container" style="margin-top: 30px">
             <button type="submit" style="margin: auto">Submit</button>
         </div>
