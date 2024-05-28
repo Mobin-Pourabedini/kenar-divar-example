@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -28,6 +28,12 @@ DEBUG = True
 ALLOWED_HOSTS = ["kenar-example.darkube.app", "localhost", "ef7e-16-24-70-196.ngrok-free.app"]
 
 CSRF_TRUSTED_ORIGINS = ['https://kenar-example.darkube.app', 'http://localhost:8000', 'http://127.0.0.1:8000']
+
+DATABASE_HOST = os.getenv("DATABASE_HOST", "localhost")
+DATABASE_PORT = os.getenv("DATABASE_PORT", "5432")
+DATABASE_NAME = os.getenv("DATABASE_NAME", "kenar_new")
+DATABASE_USER = os.getenv("DATABASE_USER", "postgres")
+DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "postgres")
 
 # Application definition
 
@@ -79,11 +85,11 @@ WSGI_APPLICATION = 'kenar_example.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'kenar_new',
-        'USER': 'postgres',
-        'PASSWORD': 'm60iT3NcTrjlk0Cowu38FgX9Zjk5Z3jj',
-        'HOST': '1ea30ff6-380f-4b23-b2af-dcd3b160b530.hsvc.ir',
-        'PORT': '31955',
+        'NAME': DATABASE_NAME,
+        'USER': DATABASE_USER,
+        'PASSWORD': DATABASE_PASSWORD,
+        'HOST': DATABASE_HOST,
+        'PORT': DATABASE_PORT,
     }
 }
 
