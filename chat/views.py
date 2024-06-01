@@ -40,7 +40,7 @@ def start_chat_session(request):
     return JsonResponse({
       "status": "200",
       "message": "success",
-      "uri": permission_url
+      "url": permission_url
     })
 
 
