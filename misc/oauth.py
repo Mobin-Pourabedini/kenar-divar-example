@@ -46,5 +46,5 @@ def generate_oauth_url(post_token, scopes, state, fallback_redirect_url=settings
         'state': state
     }
     Post.objects.get_or_create(token=post_token)
-    oath_permission_url = settings.DIVAL_OAUTH_REDIRECT_URL + f'?{urlencode(params)}'.replace('%2B', '+')
+    oath_permission_url = settings.DIVAL_OAUTH_REDIRECT_URL + f'?{urlencode(params)}'.replace('%20', ' ')
     return oath_permission_url
