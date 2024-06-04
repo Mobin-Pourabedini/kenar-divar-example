@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from rest_framework.decorators import api_view
 
 from kenar_example import settings
-from misc.oauth import generate_oauth_url
+from misc.oauth import generate_oauth_url, get_access_token
 from tech_check.models import Report, Technician, Post, User
 from tech_check.utils import apply_report_in_divar
 
@@ -36,25 +36,16 @@ def oauth_callback(request):
     post_token_and_return_url = data.get('state')
     post_token, return_url = post_token_and_return_url.split(':', maxsplit=1)
     if not return_url:
-        return_url = "https://google.com"
+        return_url = "https://www.google.com"
     post = Post.objects.get(token=post_token)
     if not post:
         return HttpResponse("Post not found")
     post.code = data.get('code')
     post.save()
-    response = requests.post(settings.DIVAR_OAUTH_ACCESS_TOKEN_URL, headers={
-        'x-api-key': settings.DIVAR_API_KEY,
-        'content-type': 'application/json',
-    }, json={
-        'code': post.code,
-        'client_id': settings.DIVAR_APP_SLUG,
-        'client_secret': settings.DIVAR_API_KEY,
-        'grant_type': 'authorization_code',
-    })
-    print("hell", response.json())
-    post.access_token = response.json().get('access_token')
+    response = get_access_token(post.code)
+    post.access_token = response.get('access_token')
     post.save()
-    response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + '/users', headers={
+    response = requests.post(settings.DIVAR_API_BASE_URL + '/v1/open-platform/users', headers={
         'content-type': 'application/json',
         'x-api-key': settings.DIVAR_API_KEY,
         'x-access-token': post.access_token,

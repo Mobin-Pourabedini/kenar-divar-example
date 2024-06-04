@@ -148,5 +148,4 @@ DIVAR_API_KEY = ("45kFWH2rsoQKBeZRWTYb5pleDGn16KS8dNLaM3cXWC63XESkeQYiOJaAC8vpxJ
                  "5HfQmyCqQMslCFl2kVBysSZYXFdtDbWEGtU0R47V8KdwFUwFaKh3TtASNQ4MKvMsod"
                  "Sf6iyJqvqhTRl7DUOmRS62JaNLVg142EfBcNFJ0Ypl2HhOhLnW6pQn8U8pyiq")
 DIVAR_OAUTH_ACCESS_TOKEN_URL = "https://api.divar.ir/v1/open-platform/oauth/access_token"
-DIVAR_OPEN_PLATFORM_BASE_URL =  \
-       "https://api.divar.ir/v1/open-platform"
+DIVAR_API_BASE_URL = "https://api.divar.ir"

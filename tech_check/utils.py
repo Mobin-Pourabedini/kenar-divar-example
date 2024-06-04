@@ -13,7 +13,7 @@ def apply_report_in_divar(report) -> requests.Response:
         report.body_health,
         report.performance_health
     ]) / 5
-    response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + f'/add-ons/post/{post.token}', headers={
+    response = requests.post(settings.DIVAR_API_BASE_URL + f'/v1/open-platform/add-ons/post/{post.token}', headers={
         'content-type': 'application/json',
         'x-api-key': settings.DIVAR_API_KEY,
         'x-access-token': post.access_token,

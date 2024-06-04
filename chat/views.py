@@ -9,7 +9,7 @@ from rest_framework.decorators import api_view
 
 from chat.models import ChatSession
 from kenar_example import settings
-from misc.oauth import generate_oauth_url, OAuthService
+from misc.oauth import generate_oauth_url, get_access_token
 from misc.utils import send_message_in_session
 from tech_check.models import Post
 
@@ -60,10 +60,8 @@ def chat_oauth_callback(request):
     except Exception as e:
         return HttpResponse("Chat session not found")
 
-    oauth_service = OAuthService(client_secret=settings.DIVAR_API_KEY, app_slug=settings.DIVAR_APP_SLUG)
-    response = oauth_service.get_access_token(data.get('code'))
+    response = get_access_token(data.get('code'))
 
-    print(response)
     if response.get("access_token") is None:
         return redirect(return_url)
 

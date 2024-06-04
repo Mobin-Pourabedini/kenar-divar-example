@@ -112,8 +112,9 @@ In response to this request, you will receive an `access_token`, a `refresh_toke
 #### Patch an addon using the access token
 following widgets are provided by divar to be used in the addons:
 you can read more about the widgets [here](https://github.com/divar-ir/kenar-docs/blob/master/widgets/ReadMe.md)
+
 ```python
-response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + f'/add-ons/post/{post.token}', headers={
+response = requests.post(settings.DIVAR_API_BASE_URL + f'/v1/open-platform/add-ons/post/{post.token}', headers={
     'content-type': 'application/json',
     'x-api-key': settings.DIVAR_API_KEY,
     'x-access-token': post.access_token,
@@ -122,7 +123,7 @@ response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + f'/add-ons/post
         'widget_list': [
             # legend_title function returns a widget definition for a legend title (in misc/widgets.py)
             legend_title(title="TechCheck Mobile", subtitle="کارشناسی گوشی موبایل", has_divider=True),
-            
+
             # group_info function returns a widget definition for a group info (in misc/widgets.py)
             group_info({
                 "سلامت باتری": f"{report.battery_health}%",
@@ -130,13 +131,13 @@ response = requests.post(settings.DIVAR_OPEN_PLATFORM_BASE_URL + f'/add-ons/post
                 "سلامت دوربین": f"{report.camera_health}%",
 
             }),
-            
+
             # score_row function returns a widget definition for a score row (in misc/widgets.py)
             score_row(title="سلامت بدنه", percentage_score=report.body_health
                       , score_color="SUCCESS_PRIMARY", has_divider=True),
             score_row(title="سلامت پردازنده", percentage_score=report.performance_health
                       , score_color="SUCCESS_PRIMARY", has_divider=True),
-            
+
             # evaluation_row function returns a widget definition for an evaluation row (in misc/widgets.py)
             evaluation_row(int(total_evaluation))
         ]
