@@ -63,7 +63,7 @@ def chat_oauth_callback(request):
     response = get_access_token(data.get('code'))
 
     if response.get("access_token") is None:
-        return redirect(return_url)
+        return HttpResponse(json.dumps(response))
 
     chat_session.access_token = response["access_token"]
     chat_session.refresh_token = response["refresh_token"]
