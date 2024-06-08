@@ -25,9 +25,9 @@ def get_access_token(code):
 
     res = requests.post(OAUTH_ENDPOINT, headers=headers, json=json_data)
 
-    logger.info("message has been send to divar.")
-    logger.info(res.json())
-    logger.info(res.status_code)
+    logger.debug("message has been send to divar.")
+    logger.debug(res.json())
+    logger.debug(res.status_code)
 
     return res.json()
 
