@@ -18,9 +18,9 @@ def index(request):
 
 @api_view(['GET'])
 def start_app(request):
-
-    post_token = request.GET.get('post_token', None)
-    return_url = request.GET.get('return_url', None)
+    data = request.query_params
+    post_token = data.get('post_token', None)
+    return_url = data.get('return_url', None)
     scopes = ' '.join([
         f'CHAT_SEND_MESSAGE_POST_CONVERSATIONS__{post_token}',
         f'ADDON_USER_APPROVED__{post_token}',
