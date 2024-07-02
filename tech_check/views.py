@@ -26,7 +26,7 @@ def start_app(request):
         f'ADDON_USER_APPROVED__{post_token}',
         'USER_PHONE',
     ])
-    print("log: " + post_token + " " + return_url)
+    print(request.GET)
     Post.objects.get_or_create(token=post_token)
     oath_permission_url = generate_oauth_url(post_token=post_token, scopes=scopes, state=f"{post_token}:{return_url}")
     return redirect(oath_permission_url)
