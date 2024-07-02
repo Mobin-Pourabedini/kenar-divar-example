@@ -40,6 +40,5 @@ def generate_oauth_url(post_token, scopes, state, fallback_redirect_url=settings
         'scope': scopes,
         'state': state
     }
-    Post.objects.get_or_create(token=post_token)
     oath_permission_url = "https://api.divar.ir/oauth2/auth" + f'?{urlencode(params)}'
     return oath_permission_url
